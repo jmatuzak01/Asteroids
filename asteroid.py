@@ -30,4 +30,26 @@ class Asteroid(CircleShape):
         new_asteroid1.velocity = new_asteroid_vector1 * 1.2
         new_asteroid2.velocity = new_asteroid_vector2 * 1.2
 
+    def resolve_collision(self, other):
+        # vector from other -> self
+        delta = self.position - other.position
+        dist = delta.length()
+        if dist == 0:
+            return  # avoid division by zero
+
+        # push them apart so they don't overlap
+        overlap = (self.radius + other.radius) - dist
+        if overlap > 0:
+            n = delta / dist  # normalized direction
+            self.position += n * (overlap / 2)
+            other.position -= n * (overlap / 2)
+
+        # simple 1D elastic collision along the normal
+        n = delta.normalize()
+        v1n = self.velocity.dot(n)
+        v2n = other.velocity.dot(n)
+
+        # swap normal components
+        self.velocity += (v2n - v1n) * n
+        other.velocity += (v1n - v2n) * n
         

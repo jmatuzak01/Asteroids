@@ -52,6 +52,17 @@ def main():
                     log_event("asteroid_shot")
                     shot.kill()
                     asteroid.split()
+
+        # asteroid–asteroid collisions
+        asteroid_list = list(asteroids)
+        for i in range(len(asteroid_list)):
+            for j in range(i + 1, len(asteroid_list)):
+                a = asteroid_list[i]
+                b = asteroid_list[j]
+
+                if a.collides_with(b):
+                    a.resolve_collision(b) #bounce asteroid a off of asteroid b
+        
         
         pygame.display.flip()
 
